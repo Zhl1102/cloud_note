@@ -15,15 +15,15 @@ def register_view(request):
         # 判断用户名和密码是否为空
         if not username or not password:
             return HttpResponse('用户名或密码不能为空')
+            # 判断两次密码是否一致
+        if password != password_2:
+            return HttpResponse('两次密码不一致')
         # 与数据库交互，判断用户名在数据库中是否存在
         if User.objects.filter(username=username):
             return HttpResponse('用户名已存在')
-        # 判断两次密码是否一致
-        if password != password_2:
-            return HttpResponse('两次密码不一致')
 
         user = User.objects.create(username=username, password=password)
-        return HttpResponse('用户创建成功')
+        return HttpResponse('用户注册成功，请 <a href="/user/login/">登录</a>')
 
 def login_view(request):
     if request.method == 'GET':
@@ -32,7 +32,6 @@ def login_view(request):
             return HttpResponse(f'欢迎{request.session["uname"]}, 可访问其他功能或<a href="/user/logout">退出登录</a>')
         return render(request, 'user/login.html')
     elif request.method == 'POST':
-        resp = HttpResponse('登录成功，设置cookie')
         username = request.POST.get('username')
         password = request.POST.get('password')
 
@@ -50,7 +49,7 @@ def login_view(request):
         request.session['uname'] = user.username
         request.session['uid'] = user.id
 
-        return HttpResponse('登录成功')
+        return HttpResponse('登录成功，请 <a href="/note/">查看笔记</a>')
 
 def logout_view(request):
     if 'uname' not in request.session and 'uid' not in request.session:

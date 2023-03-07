@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/note/mod/{{ note.id }}/", method="post">
+        {% csrf_token %}
+        主题 <input type="text" name="title" value="{{ note.title }}">
+        <input type="submit" value="保存">
+        <a href="/note">返回列表</a>
+        <br>
+        <textarea name="content" id="" cols="30" rows="10">{{ note.content }}</textarea>
+    </form>
+</body>
+</html>
